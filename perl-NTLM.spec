@@ -5,11 +5,14 @@
 
 Name:           %{?scl_prefix}perl-NTLM
 Version:        1.09
-Release:        25%{?dist}
+Release:        26%{?dist}
 Summary:        NTLM Perl module
 License:        GPL+ or Artistic
 URL:            https://metacpan.org/release/NTLM
 Source0:        https://cpan.metacpan.org/authors/id/N/NB/NBEBOUT/NTLM-%{version}.tar.gz
+# Remove useless shebangs from the module files, bug #1813360, CPAN RT#132167,
+# submitted to the upstream
+Patch0:         NTLM-1.09-Remove-shebangs-from-the-modules.patch
 BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  %{?scl_prefix}perl-generators
@@ -39,6 +42,7 @@ on its own for NTLM authentication with other protocols (eg. HTTP).
 
 %prep
 %setup -q -n NTLM-%{version}
+%patch0 -p1
 
 %build
 %{?scl:scl enable %{scl} '}perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1 NO_PERLLOCAL=1 && %{make_build}%{?scl:'}
@@ -56,6 +60,9 @@ on its own for NTLM authentication with other protocols (eg. HTTP).
 %{_mandir}/man3/*
 
 %changelog
+* Tue Mar 17 2020 Petr Pisar <ppisar@redhat.com> - 1.09-26
+- Remove useless shebangs from the module files (bug #1813360)
+
 * Fri Feb 14 2020 Petr Pisar <ppisar@redhat.com> - 1.09-25
 - Import to SCL
 
